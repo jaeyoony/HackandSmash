@@ -1,0 +1,150 @@
+[gd_scene load_steps=16 format=2]
+
+[ext_resource path="res://stages/left_stage_ledge.gd" type="Script" id=2]
+[ext_resource path="res://stages/template.gd" type="Script" id=3]
+[ext_resource path="res://stages/right_stage_ledge.gd" type="Script" id=4]
+[ext_resource path="res://stage_camera.tscn" type="PackedScene" id=5]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 830.253, 66.2528 )
+
+[sub_resource type="RectangleShape2D" id=2]
+extents = Vector2( 838.034, 60.9074 )
+
+[sub_resource type="RectangleShape2D" id=3]
+extents = Vector2( 134.034, 413.262 )
+
+[sub_resource type="RectangleShape2D" id=4]
+extents = Vector2( 140, 410 )
+
+[sub_resource type="RectangleShape2D" id=5]
+extents = Vector2( 40, 2 )
+
+[sub_resource type="CanvasItemMaterial" id=6]
+
+[sub_resource type="RectangleShape2D" id=7]
+extents = Vector2( 40, 2 )
+
+[sub_resource type="RectangleShape2D" id=8]
+extents = Vector2( 40, 2 )
+
+[sub_resource type="RectangleShape2D" id=9]
+extents = Vector2( 10, 164.306 )
+
+[sub_resource type="RectangleShape2D" id=10]
+extents = Vector2( 5, 5 )
+
+[sub_resource type="RectangleShape2D" id=11]
+extents = Vector2( 5, 5 )
+
+[node name="Stage" type="Node2D"]
+script = ExtResource( 3 )
+
+[node name="players" type="Node" parent="."]
+
+[node name="stage_cam" parent="players" instance=ExtResource( 5 )]
+position = Vector2( -0.588562, -72.4651 )
+current = true
+zoom = Vector2( 0.4, 0.4 )
+limit_left = -100000
+move_speed = 0.1
+
+[node name="blastzone" type="Area2D" parent="."]
+modulate = Color( 1, 0, 0, 1 )
+collision_layer = 2
+collision_mask = 4
+
+[node name="bottom" type="CollisionShape2D" parent="blastzone"]
+position = Vector2( 0, 350 )
+shape = SubResource( 1 )
+
+[node name="top" type="CollisionShape2D" parent="blastzone"]
+position = Vector2( 0, -420 )
+shape = SubResource( 2 )
+
+[node name="right" type="CollisionShape2D" parent="blastzone"]
+position = Vector2( 650, 0 )
+shape = SubResource( 3 )
+
+[node name="left" type="CollisionShape2D" parent="blastzone"]
+position = Vector2( -663.214, 0 )
+shape = SubResource( 4 )
+
+[node name="platforms" type="StaticBody2D" parent="."]
+collision_layer = 16
+collision_mask = 16
+
+[node name="center" type="CollisionShape2D" parent="platforms"]
+position = Vector2( 0.707123, -46.7242 )
+shape = SubResource( 5 )
+one_way_collision = true
+
+[node name="left" type="CollisionShape2D" parent="platforms"]
+show_behind_parent = true
+material = SubResource( 6 )
+position = Vector2( -129.772, -32 )
+shape = SubResource( 7 )
+one_way_collision = true
+one_way_collision_margin = 0.0
+
+[node name="right" type="CollisionShape2D" parent="platforms"]
+position = Vector2( 128.048, -32.2117 )
+shape = SubResource( 8 )
+one_way_collision = true
+
+[node name="spawn_point_1" type="Position2D" parent="."]
+position = Vector2( -129.772, -117.475 )
+
+[node name="spawn_point_2" type="Position2D" parent="."]
+position = Vector2( 127.252, -119.063 )
+
+[node name="main_stage" type="StaticBody2D" parent="."]
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="main_stage"]
+polygon = PoolVector2Array( -300, 10, 300, 10, 300, 20, 100, 60, 0, 100, -100, 60, -300, 20 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="main_stage"]
+position = Vector2( -295, -100.974 )
+shape = SubResource( 9 )
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="main_stage"]
+position = Vector2( 295, -100.974 )
+shape = SubResource( 9 )
+
+[node name="left_stage_ledge" type="Area2D" parent="."]
+collision_layer = 64
+collision_mask = 0
+script = ExtResource( 2 )
+
+[node name="ledge_shape" type="CollisionShape2D" parent="left_stage_ledge"]
+self_modulate = Color( 0.427451, 0.0784314, 0.717647, 1 )
+position = Vector2( -295, 15 )
+shape = SubResource( 10 )
+
+[node name="right_stage_ledge" type="Area2D" parent="."]
+collision_layer = 64
+collision_mask = 0
+script = ExtResource( 4 )
+
+[node name="ledge_shape" type="CollisionShape2D" parent="right_stage_ledge"]
+self_modulate = Color( 0.427451, 0.0784314, 0.717647, 1 )
+position = Vector2( 295, 15 )
+shape = SubResource( 11 )
+
+[node name="UI_elements" type="CanvasLayer" parent="."]
+
+[node name="HBoxContainer" type="HBoxContainer" parent="UI_elements"]
+anchor_top = 0.75
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 50.0
+margin_top = 50.0
+margin_right = -50.0
+margin_bottom = -50.0
+custom_constants/separation = 250
+alignment = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+[connection signal="area_entered" from="blastzone" to="." method="_on_blastzone_area_entered"]
+[connection signal="body_entered" from="blastzone" to="." method="_on_blastzone_body_entered"]
